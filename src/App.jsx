@@ -12,19 +12,39 @@ const films = [
 
 function App() {
 
-  const [filteredFilm, setFilteredFilm] = useState(films)
+  //filter
+  const [filteredFilm, setFilteredFilm] = useState(films);
   const [searchGenre, setSearchCategory] = useState('');
+  //create
+  const [initialFilm, setFilm] = useState(films);
+  const [newFilm, setNewFilm] = useState('');
+  const [addCategory, setNewCategory] = useState('');
 
   useEffect(() => {
 
-    let updatedFilm = films;
+    let updatedFilm = initialFilm;
 
     if (searchGenre !== '') {
       updatedFilm = updatedFilm.filter(film => film.genre === searchGenre)
     }
 
     setFilteredFilm(updatedFilm);
-  }, [searchGenre])
+  }, [searchGenre, initialFilm]);
+
+  const sendForm = event => {
+    event.preventDefault();
+
+    let pushFilm = {
+      title: newFilm,
+      genre: addCategory
+    }
+
+    setFilm([...initialFilm, pushFilm]);
+    setNewFilm('');
+    setNewCategory('');
+
+  }
+
 
   return (
     <>
@@ -52,6 +72,19 @@ function App() {
       <hr />
 
       <section>
+        <form onSubmit={sendForm}>
+          <input type="text" placeholder='Aggiungi Film' value={newFilm} onChange={e => { setNewFilm(e.target.value) }} />
+          <select value={addCategory} onChange={e => setNewCategory(e.target.value)}>
+            <option value="">---</option>
+            <option>Fantascienza</option>
+            <option>Thriller</option>
+            <option>Romantico</option>
+            <option>Azione</option>
+          </select>
+          <button>Invia</button>
+        </form>
+
+        <hr />
         <ul>
           {filteredFilm.map((film, i) => <li key={i}>
             <h3>{film.title}</h3>
