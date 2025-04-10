@@ -15,6 +15,7 @@ function App() {
   //filter
   const [filteredFilm, setFilteredFilm] = useState(films);
   const [searchGenre, setSearchCategory] = useState('');
+  const [searchName, setSearchName] = useState('');
   //create
   const [initialFilm, setFilm] = useState(films);
   const [newFilm, setNewFilm] = useState('');
@@ -25,11 +26,15 @@ function App() {
     let updatedFilm = initialFilm;
 
     if (searchGenre !== '') {
-      updatedFilm = updatedFilm.filter(film => film.genre === searchGenre)
+      updatedFilm = updatedFilm.filter(film => film.genre === searchGenre);
+    }
+
+    if (searchName !== '') {
+      updatedFilm = updatedFilm.filter(film => film.title.toLowerCase().includes(searchName.toLowerCase()));
     }
 
     setFilteredFilm(updatedFilm);
-  }, [searchGenre, initialFilm]);
+  }, [searchGenre, initialFilm, searchName]);
 
   const sendForm = event => {
     event.preventDefault();
@@ -44,7 +49,6 @@ function App() {
     setNewCategory('');
 
   }
-
 
   return (
     <>
@@ -63,7 +67,10 @@ function App() {
             <option>Romantico</option>
             <option>Azione</option>
           </select>
-
+          <br />
+          <label>Cerca Nome</label>
+          <br />
+          <input type="text" placeholder='Cerca film' value={searchName} onChange={e => { setSearchName(e.target.value) }} />
         </div>
 
 
@@ -72,6 +79,7 @@ function App() {
       <hr />
 
       <section>
+        <label>Aggiungi film</label>
         <form onSubmit={sendForm}>
           <input type="text" placeholder='Aggiungi Film' value={newFilm} onChange={e => { setNewFilm(e.target.value) }} />
           <select value={addCategory} onChange={e => setNewCategory(e.target.value)}>
